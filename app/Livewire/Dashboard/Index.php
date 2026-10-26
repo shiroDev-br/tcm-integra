@@ -14,7 +14,7 @@ use Livewire\Attributes\Title;
 use Livewire\Component;
 
 #[Lazy]
-#[Title('Dashboard')]
+#[Title('Painel')]
 class Index extends Component
 {
     /**

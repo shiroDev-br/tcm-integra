@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Api\HealthController;
 use App\Livewire\Buscas\Index as BuscasIndex;
 use App\Livewire\Dashboard\Index as DashboardIndex;
 use App\Livewire\Edicoes\Index as EdicoesIndex;
@@ -13,7 +12,7 @@ use App\Models\Multa;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 
-Route::get('/', [HealthController::class, 'placeholder'])->name('home');
+Route::redirect('/', '/login')->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::livewire('dashboard', DashboardIndex::class)->name('dashboard');

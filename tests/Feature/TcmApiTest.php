@@ -7,12 +7,8 @@ beforeEach(function () {
     fakeTcmHttp();
 });
 
-test('health e placeholder sao publicos', function () {
+test('health e publico', function () {
     $this->getJson('/api/health')->assertOk()->assertExactJson(['status' => 'ok']);
-
-    $raiz = $this->get('/');
-    $raiz->assertOk();
-    $raiz->assertSee('TCM Scrapping');
 });
 
 test('edicao atual vem da fonte', function () {
@@ -169,5 +165,4 @@ test('rotas de dados exigem token', function () {
     }
 
     $this->getJson('/api/health')->assertOk();
-    $this->get('/')->assertOk();
 });

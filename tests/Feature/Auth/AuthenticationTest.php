@@ -6,7 +6,21 @@ use Laravel\Fortify\Features;
 test('login screen can be rendered', function () {
     $response = $this->get(route('login'));
 
-    $response->assertOk();
+    $response->assertOk()
+        ->assertSee('Entre na sua conta')
+        ->assertSee('Usuário', false)
+        ->assertDontSee('Entrar com chave de acesso')
+        ->assertDontSee('Cadastre-se');
+});
+
+test('login invalido mostra o erro em portugues', function () {
+    $this->from(route('login'))
+        ->post(route('login.store'), ['email' => 'ninguem', 'password' => 'errada'])
+        ->assertSessionHasErrors(['email' => 'Usuário ou senha inválidos.']);
+});
+
+test('cadastro de usuarios nao existe', function () {
+    $this->get('/register')->assertNotFound();
 });
 
 test('users can authenticate using the login screen', function () {

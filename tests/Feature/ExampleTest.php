@@ -1,7 +1,5 @@
 <?php
 
-test('returns a successful response', function () {
-    $response = $this->get(route('home'));
-
-    $response->assertOk();
+test('a raiz redireciona para o login', function () {
+    $this->get(route('home'))->assertRedirect('/login');
 });
