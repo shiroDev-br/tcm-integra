@@ -1,0 +1,13 @@
+[
+  { "termo": "Maiquinique", "tipo": "municipio", "ativo": true, "variacoes": [] },
+  { "termo": "Cândido Sales", "tipo": "municipio", "ativo": true, "variacoes": [] },
+  { "termo": "Bom Jesus da Serra", "tipo": "municipio", "ativo": true, "variacoes": [] },
+  { "termo": "Itarantim", "tipo": "municipio", "ativo": true, "variacoes": [] },
+  { "termo": "Potiraguá", "tipo": "municipio", "ativo": true, "variacoes": [] },
+  { "termo": "Boa Nova", "tipo": "municipio", "ativo": true, "variacoes": [] },
+  { "termo": "Buerarema", "tipo": "municipio", "ativo": true, "variacoes": [] },
+  { "termo": "Itajuípe", "tipo": "municipio", "ativo": true, "variacoes": [] },
+  { "termo": "Santanópolis", "tipo": "municipio", "ativo": true, "variacoes": [] },
+  { "termo": "Alfacon", "tipo": "empresa", "ativo": true, "variacoes": [] },
+  { "termo": "Plenary", "tipo": "empresa", "ativo": true, "variacoes": [] }
+]
