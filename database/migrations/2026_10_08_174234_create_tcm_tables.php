@@ -35,7 +35,7 @@ return new class extends Migration
             $table->increments('id');
             $table->integer('edicao_id');
             $table->integer('pagina');
-            $table->integer('termo_id');
+            $table->unsignedInteger('termo_id');
             $table->text('trecho');
             $table->text('contexto');
             $table->text('atos');
@@ -67,7 +67,7 @@ return new class extends Migration
         });
 
         Schema::create('termo_processos', function (Blueprint $table) {
-            $table->integer('termo_id');
+            $table->unsignedInteger('termo_id');
             $table->string('processo_numero', 30);
             $table->string('periodo_inicio', 10);
             $table->string('periodo_fim', 10);

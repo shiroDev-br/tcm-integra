@@ -1,0 +1,35 @@
+name: deploy
+
+# Publica na VPS só depois que os testes do main passam (ou manualmente).
+# O script /usr/local/bin/tcm-integra-deploy.sh na VPS faz fetch/reset do main,
+# composer, build dos assets, migrations e health check.
+on:
+  workflow_run:
+    workflows: [tests]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-main
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2 # v1.2.5
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT }}
+          fingerprint: ${{ secrets.VPS_FINGERPRINT }}
+          command_timeout: 20m
+          script: bash /usr/local/bin/tcm-integra-deploy.sh
