@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Termos;
+namespace App\Livewire\Cadastros;
 
 use App\Concerns\TermoValidationRules;
 use App\Enums\TermType;
@@ -14,7 +14,7 @@ use Illuminate\View\View;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-#[Title('Termos')]
+#[Title('Cadastros')]
 class Index extends Component
 {
     use TermoValidationRules;
@@ -91,12 +91,12 @@ class Index extends Component
             'editandoTipo' => ['required', 'in:'.implode(',', $this->tiposTermosDisponiveis())],
             'editandoAtivo' => ['required', 'boolean'],
         ], [
-            'editandoTermo.required' => 'O campo termo é obrigatório.',
-            'editandoTermo.max' => 'O campo termo não pode ter mais de 120 caracteres.',
+            'editandoTermo.required' => 'O campo nome é obrigatório.',
+            'editandoTermo.max' => 'O campo nome não pode ter mais de 120 caracteres.',
             'editandoTipo.required' => 'O campo tipo é obrigatório.',
             'editandoTipo.in' => 'O tipo deve ser um dos valores permitidos.',
         ], [
-            'editandoTermo' => 'termo',
+            'editandoTermo' => 'nome',
             'editandoTipo' => 'tipo',
             'editandoAtivo' => 'ativo',
         ]);
@@ -113,7 +113,7 @@ class Index extends Component
                     'variacoes' => array_slice($variacoes, 0, 10),
                 ]);
 
-                $mensagem = 'Termo atualizado com sucesso.';
+                $mensagem = 'Cadastro atualizado com sucesso.';
             } else {
                 $service->create([
                     'termo' => $validado['editandoTermo'],
@@ -122,14 +122,14 @@ class Index extends Component
                     'variacoes' => array_slice($variacoes, 0, 10),
                 ]);
 
-                $mensagem = 'Termo cadastrado com sucesso.';
+                $mensagem = 'Cadastro criado com sucesso.';
             }
         } catch (TermAlreadyExists) {
-            $this->addError('editandoTermo', 'Este termo já está cadastrado.');
+            $this->addError('editandoTermo', 'Este cadastro já existe.');
 
             return;
         } catch (TermNotFound) {
-            $this->addError('editandoTermo', 'Termo não encontrado.');
+            $this->addError('editandoTermo', 'Cadastro não encontrado.');
 
             return;
         }
@@ -152,7 +152,7 @@ class Index extends Component
         $this->exclusaoAberta = false;
         $this->excluindoId = null;
 
-        Flux::toast(variant: 'success', text: 'Termo excluído com sucesso.');
+        Flux::toast(variant: 'success', text: 'Cadastro excluído com sucesso.');
     }
 
     private function resetForm(): void
@@ -165,7 +165,7 @@ class Index extends Component
 
     public function render(): View
     {
-        return view('livewire.termos', [
+        return view('livewire.cadastros', [
             'termos' => $this->termos(),
         ]);
     }

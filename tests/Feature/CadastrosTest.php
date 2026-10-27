@@ -1,21 +1,21 @@
 <?php
 
 use App\Enums\TermType;
-use App\Livewire\Termos\Index;
+use App\Livewire\Cadastros\Index;
 use App\Models\Term;
 use App\Models\User;
 use Livewire\Livewire;
 
 test('visitantes sao redirecionados para o login', function () {
-    $this->get(route('termos.index'))->assertRedirect(route('login'));
+    $this->get(route('cadastros.index'))->assertRedirect(route('login'));
 });
 
-test('usuario autenticado abre a listagem de termos', function () {
+test('usuario autenticado abre a listagem de cadastros', function () {
     $this->actingAs(User::factory()->create());
 
-    $this->get(route('termos.index'))
+    $this->get(route('cadastros.index'))
         ->assertOk()
-        ->assertSee('Novo termo');
+        ->assertSee('Novo cadastro');
 });
 
 test('cadastro cria um termo', function () {

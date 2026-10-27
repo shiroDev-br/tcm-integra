@@ -60,7 +60,7 @@
             @empty
                 <flux:table.row>
                     <flux:table.cell colspan="7">
-                        <x-ui.empty-state icon="folder-open" title="Nenhum processo encontrado para este termo." description="Ajuste a busca ou o filtro de situação." />
+                        <x-ui.empty-state icon="folder-open" title="Nenhum processo encontrado para este cadastro." description="Ajuste a busca ou o filtro de situação." />
                     </flux:table.cell>
                 </flux:table.row>
             @endforelse

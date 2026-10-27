@@ -42,6 +42,14 @@ final class Clock
         return self::now()->format('Y-m-d');
     }
 
+    /**
+     * Current wall-clock time (H:i) in the TCM timezone.
+     */
+    public static function currentTime(): string
+    {
+        return self::now()->format('H:i');
+    }
+
     private static function now(): DateTimeImmutable
     {
         return new DateTimeImmutable('now', new DateTimeZone(config('tcm.timezone')));

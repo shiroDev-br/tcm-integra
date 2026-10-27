@@ -27,15 +27,12 @@ class Index extends Component
     #[Url(as: 'fim')]
     public string $fim = '';
 
-    #[Url(as: 'suplemento')]
-    public string $filtroSuplemento = '';
-
     /**
      * @return list<string>
      */
     protected function filtrosDaListagem(): array
     {
-        return ['busca', 'inicio', 'fim', 'filtroSuplemento'];
+        return ['busca', 'inicio', 'fim'];
     }
 
     /**
@@ -50,7 +47,6 @@ class Index extends Component
             'busca' => $this->busca,
             'inicio' => $this->inicio,
             'fim' => $this->fim,
-            'suplemento' => $this->filtroSuplemento,
         ]);
     }
 

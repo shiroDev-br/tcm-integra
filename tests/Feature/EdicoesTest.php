@@ -66,8 +66,9 @@ test('listagem exibe as edicoes cadastradas', function () {
 
     Livewire::test(Index::class)
         ->assertSee('01/10/2026')
+        ->assertSee('02/10/2026')
         ->assertSee('Ordinária')
-        ->assertSee('Sim');
+        ->assertDontSee('Suplemento');
 });
 
 test('busca filtra edicoes por data', function () {
@@ -78,16 +79,6 @@ test('busca filtra edicoes por data', function () {
         ->set('busca', '2026-10')
         ->assertSee('15/10/2026')
         ->assertDontSee('01/09/2026');
-});
-
-test('filtro por suplemento mostra apenas suplementos', function () {
-    edicaoComTermo(['id' => 1, 'data' => '2026-10-01', 'suplemento' => false]);
-    edicaoComTermo(['id' => 2, 'data' => '2026-10-02', 'suplemento' => true]);
-
-    Livewire::test(Index::class)
-        ->set('filtroSuplemento', 'sim')
-        ->assertSee('02/10/2026')
-        ->assertDontSee('01/10/2026');
 });
 
 test('intervalo de datas filtra edicoes', function () {

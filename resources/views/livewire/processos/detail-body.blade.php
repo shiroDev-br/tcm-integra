@@ -80,7 +80,7 @@
 
 @if ($vinculos->isNotEmpty())
     <div class="space-y-3">
-        <flux:heading>Termos vinculados</flux:heading>
+        <flux:heading>Cadastros vinculados</flux:heading>
 
         <div class="flex flex-wrap gap-2">
             @foreach ($vinculos as $vinculo)

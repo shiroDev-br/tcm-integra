@@ -108,24 +108,9 @@ class Edition extends Model
     }
 
     /**
-     * Supplement filter: "sim", "nao" or empty for all.
-     *
-     * @param  Builder<Edition>  $query
-     */
-    #[Scope]
-    protected function comSuplemento(Builder $query, string $suplemento): void
-    {
-        if ($suplemento === '') {
-            return;
-        }
-
-        $query->where('suplemento', $suplemento === 'sim');
-    }
-
-    /**
      * Edition listing, newest first, paginated by cursor.
      *
-     * @param  array{busca: string, inicio: string, fim: string, suplemento: string}  $filtros
+     * @param  array{busca: string, inicio: string, fim: string}  $filtros
      * @return CursorPaginator<int, static>
      */
     public static function paginarListagem(array $filtros, int $porPagina = 15): CursorPaginator
@@ -136,7 +121,6 @@ class Edition extends Model
             ->comBusca($filtros['busca'])
             ->publicadasAPartirDe($filtros['inicio'])
             ->publicadasAte($filtros['fim'])
-            ->comSuplemento($filtros['suplemento'])
             ->orderByDesc('data')
             ->orderByDesc('id')
             ->cursorPaginate($porPagina)

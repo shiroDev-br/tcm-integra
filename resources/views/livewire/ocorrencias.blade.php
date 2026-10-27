@@ -1,6 +1,6 @@
 <div class="flex flex-col gap-6">
     @if ($termoAtual === null)
-        <x-ui.page-header title="Ocorrências" subtitle="Selecione um município ou termo para ver as ocorrências encontradas" icon="document-text" />
+        <x-ui.page-header title="Ocorrências" subtitle="Selecione um município ou cadastro para ver as ocorrências encontradas" icon="document-text" />
 
         <x-term-cards
             :termos="$this->termos"
@@ -10,7 +10,7 @@
             empty-description="Cadastre municípios ou empresas para acompanhar as ocorrências."
         />
     @else
-        <x-term-header :termo="$termoAtual" subtitle="Ocorrências encontradas neste termo" />
+        <x-term-header :termo="$termoAtual" subtitle="Ocorrências encontradas neste cadastro" />
 
         @include('livewire.ocorrencias.table')
     @endif

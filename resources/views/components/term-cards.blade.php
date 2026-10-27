@@ -9,8 +9,8 @@
 
 @if ($termos->isEmpty())
     <x-ui.panel>
-        <x-ui.empty-state icon="tag" title="Nenhum termo ativo cadastrado" :description="$emptyDescription">
-            <flux:button variant="primary" icon="plus" :href="route('termos.index')" wire:navigate>Cadastrar termo</flux:button>
+        <x-ui.empty-state icon="tag" title="Nenhum cadastro ativo" :description="$emptyDescription">
+            <flux:button variant="primary" icon="plus" :href="route('cadastros.index')" wire:navigate>Novo cadastro</flux:button>
         </x-ui.empty-state>
     </x-ui.panel>
 @else

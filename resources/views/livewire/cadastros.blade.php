@@ -5,16 +5,16 @@
 @endphp
 
 <div class="flex flex-col gap-6">
-    <x-ui.page-header title="Termos" subtitle="Municípios e empresas monitorados nas coletas" icon="tag">
+    <x-ui.page-header title="Cadastros" subtitle="Municípios e empresas monitorados nas coletas" icon="tag">
         <x-slot:actions>
-            <flux:button variant="primary" icon="plus" wire:click="criar">Novo termo</flux:button>
+            <flux:button variant="primary" icon="plus" wire:click="criar">Novo cadastro</flux:button>
         </x-slot:actions>
     </x-ui.page-header>
 
     <x-ui.filter-bar :target="$filtros">
         <flux:field class="flex-1">
             <flux:label>Busca</flux:label>
-            <flux:input wire:model.live.debounce.400ms="busca" icon="magnifying-glass" placeholder="Nome do termo" clearable />
+            <flux:input wire:model.live.debounce.400ms="busca" icon="magnifying-glass" placeholder="Nome do município ou empresa" clearable />
         </flux:field>
 
         <flux:field class="sm:w-48">
@@ -36,11 +36,11 @@
         </flux:field>
     </x-ui.filter-bar>
 
-    <x-ui.table-panel :target="$filtros.',excluir'" label="Buscando termos...">
+    <x-ui.table-panel :target="$filtros.',excluir'" label="Buscando cadastros...">
         <flux:table>
             <flux:table.columns>
                 <flux:table.column>ID</flux:table.column>
-                <flux:table.column>Termo</flux:table.column>
+                <flux:table.column>Nome</flux:table.column>
                 <flux:table.column>Tipo</flux:table.column>
                 <flux:table.column>Variações</flux:table.column>
                 <flux:table.column>Situação</flux:table.column>
@@ -65,16 +65,16 @@
                         <flux:table.cell><x-badges.active :active="(bool) $termo->ativo" /></flux:table.cell>
                         <flux:table.cell align="end">
                             <div class="flex items-center justify-end gap-1">
-                                <x-ui.action-button icon="pencil-square" label="Editar termo" color="amber" wire:click="editar({{ $termo->id }})" />
-                                <x-ui.action-button icon="trash" label="Excluir termo" color="red" wire:click="confirmarExclusao({{ $termo->id }})" />
+                                <x-ui.action-button icon="pencil-square" label="Editar cadastro" color="amber" wire:click="editar({{ $termo->id }})" />
+                                <x-ui.action-button icon="trash" label="Excluir cadastro" color="red" wire:click="confirmarExclusao({{ $termo->id }})" />
                             </div>
                         </flux:table.cell>
                     </flux:table.row>
                 @empty
                     <flux:table.row>
                         <flux:table.cell colspan="6">
-                            <x-ui.empty-state icon="tag" title="Nenhum termo encontrado." description="Ajuste os filtros ou cadastre um novo termo.">
-                                <flux:button size="sm" icon="plus" wire:click="criar">Novo termo</flux:button>
+                            <x-ui.empty-state icon="tag" title="Nenhum cadastro encontrado." description="Ajuste os filtros ou crie um novo cadastro.">
+                                <flux:button size="sm" icon="plus" wire:click="criar">Novo cadastro</flux:button>
                             </x-ui.empty-state>
                         </flux:table.cell>
                     </flux:table.row>
@@ -83,12 +83,12 @@
         </flux:table>
     </x-ui.table-panel>
 
-    @include('livewire.termos.form-modal')
+    @include('livewire.cadastros.form-modal')
 
     <x-ui.confirm-modal
         model="exclusaoAberta"
         action="excluir"
-        title="Excluir termo"
-        description="Esta ação remove o termo, suas ocorrências e vínculos com processos. A tabela de processos permanece."
+        title="Excluir cadastro"
+        description="Esta ação remove o cadastro, suas ocorrências e vínculos com processos. A tabela de processos permanece."
     />
 </div>

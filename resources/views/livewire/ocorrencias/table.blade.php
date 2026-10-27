@@ -65,7 +65,7 @@
             @empty
                 <flux:table.row>
                     <flux:table.cell colspan="5">
-                        <x-ui.empty-state icon="document-magnifying-glass" title="Nenhuma ocorrência encontrada para este termo." description="Ajuste os filtros ou execute uma nova busca." />
+                        <x-ui.empty-state icon="document-magnifying-glass" title="Nenhuma ocorrência encontrada para este cadastro." description="Ajuste os filtros ou execute uma nova busca." />
                     </flux:table.cell>
                 </flux:table.row>
             @endforelse

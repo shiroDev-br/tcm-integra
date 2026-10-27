@@ -11,7 +11,7 @@
                 @periodo($busca->periodo_inicio, $busca->periodo_fim)
             </div>
             <flux:text size="sm">
-                {{ $busca->termos }} {{ $busca->termos === 1 ? 'termo' : 'termos' }} · @dataHora($busca->created_at)
+                {{ $busca->termos }} {{ $busca->termos === 1 ? 'cadastro' : 'cadastros' }} · @dataHora($busca->created_at)
             </flux:text>
         </div>
     </div>

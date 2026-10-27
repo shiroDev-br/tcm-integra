@@ -28,8 +28,8 @@
     </flux:sidebar.group>
 
     <flux:sidebar.group heading="Administração" class="grid">
-        <flux:sidebar.item icon="tag" :href="route('termos.index')" :current="request()->routeIs('termos.index')" wire:navigate>
-            {{ __('Termos') }}
+        <flux:sidebar.item icon="tag" :href="route('cadastros.index')" :current="request()->routeIs('cadastros.index')" wire:navigate>
+            {{ __('Cadastros') }}
         </flux:sidebar.item>
 
         @can('manage-panel-accounts')

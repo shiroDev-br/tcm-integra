@@ -3,13 +3,13 @@
 <x-ui.form-modal
     model="formAberto"
     action="salvar"
-    :title="$editandoId !== null ? 'Editar termo' : 'Novo termo'"
-    subtitle="Termos ativos são pesquisados em todas as coletas."
+    :title="$editandoId !== null ? 'Editar cadastro' : 'Novo cadastro'"
+    subtitle="Cadastros ativos são pesquisados em todas as coletas."
     icon="tag"
     class="md:w-2xl"
 >
     <flux:field>
-        <flux:label>Termo</flux:label>
+        <flux:label>Nome</flux:label>
         <flux:input wire:model="editandoTermo" placeholder="Ex.: Maiquinique" />
         <flux:error name="editandoTermo" />
     </flux:field>
@@ -38,7 +38,7 @@
     <flux:field>
         <flux:label>Variações</flux:label>
         <flux:textarea wire:model="editandoVariacoes" rows="4" placeholder="Uma variação por linha (máx. 10)" />
-        <flux:description>Uma variação por linha. Termos com espaço são buscados com aspas automaticamente.</flux:description>
+        <flux:description>Uma variação por linha. Nomes com espaço são buscados com aspas automaticamente.</flux:description>
         <flux:error name="editandoVariacoes" />
     </flux:field>
 </x-ui.form-modal>

@@ -9,7 +9,7 @@
         etapas: [
             'Conectando ao Diário Oficial do TCM-BA...',
             'Varrendo as edições do período...',
-            'Identificando ocorrências dos termos...',
+            'Identificando ocorrências dos cadastros...',
             'Consultando a situação dos processos...',
             'Consolidando os resultados...',
         ],

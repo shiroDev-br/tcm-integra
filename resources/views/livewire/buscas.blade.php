@@ -46,6 +46,8 @@
 
     @include('livewire.buscas.collecting')
 
+    <livewire:buscas.coleta-automatica />
+
     <section class="flex flex-col gap-3">
         <flux:heading size="lg">Histórico de buscas</flux:heading>
 
@@ -53,7 +55,7 @@
             <flux:table>
                 <flux:table.columns>
                     <flux:table.column>Período</flux:table.column>
-                    <flux:table.column>Termos</flux:table.column>
+                    <flux:table.column>Cadastros</flux:table.column>
                     <flux:table.column>Duração</flux:table.column>
                     <flux:table.column>Status</flux:table.column>
                     <flux:table.column>Quando</flux:table.column>
