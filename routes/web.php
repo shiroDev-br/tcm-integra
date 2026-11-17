@@ -6,8 +6,10 @@ use App\Livewire\Dashboard\Index as DashboardIndex;
 use App\Livewire\Edicoes\Index as EdicoesIndex;
 use App\Livewire\Multas\Index as MultasIndex;
 use App\Livewire\Ocorrencias\Index as OcorrenciasIndex;
+use App\Livewire\Organizacoes\Index as OrganizacoesIndex;
 use App\Livewire\Usuarios\Index as UsuariosIndex;
 use App\Models\Multa;
+use App\Models\Organizacao;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 
@@ -37,6 +39,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         return Storage::disk('local')->download($multa->comprovante);
     })->name('multas.comprovante');
+
+    Route::livewire('organizacoes', OrganizacoesIndex::class)->name('organizacoes.index');
+
+    Route::get('organizacoes/{organizacao}/download', function (Organizacao $organizacao) {
+        abort_unless($organizacao->possuiArquivoDeSaida(), 404);
+
+        return Storage::disk($organizacao->disco())->download($organizacao->arquivo_saida, $organizacao->nomeParaDownload());
+    })->name('organizacoes.download');
 });
 
 require __DIR__.'/settings.php';
