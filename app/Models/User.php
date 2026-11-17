@@ -3,11 +3,13 @@
 namespace App\Models;
 
 use App\Enums\Role;
+use App\Services\Clock;
 use Database\Factories\UserFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
@@ -49,6 +51,24 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
             'password' => 'hashed',
             'role' => Role::class,
         ];
+    }
+
+    /**
+     * Terms this user has opened, with when (`visto_em`, UTC ISO) they last did.
+     *
+     * @return BelongsToMany<Term, $this>
+     */
+    public function termosVistos(): BelongsToMany
+    {
+        return $this->belongsToMany(Term::class, 'termo_user', 'user_id', 'termo_id')->withPivot('visto_em');
+    }
+
+    /**
+     * Records that the user opened the term now (takes it out of "found today").
+     */
+    public function marcarTermoComoVisto(int $termoId): void
+    {
+        $this->termosVistos()->syncWithoutDetaching([$termoId => ['visto_em' => Clock::nowUtcIso()]]);
     }
 
     /**

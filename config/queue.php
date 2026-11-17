@@ -44,6 +44,16 @@ return [
             'after_commit' => false,
         ],
 
+        // Jobs longos do organizador de prestação de contas (OCR): retry_after acima do timeout do job.
+        'organizador' => [
+            'driver' => env('ORGANIZADOR_QUEUE_DRIVER', 'database'),
+            'connection' => env('DB_QUEUE_CONNECTION'),
+            'table' => env('DB_QUEUE_TABLE', 'jobs'),
+            'queue' => 'organizador',
+            'retry_after' => 3700,
+            'after_commit' => false,
+        ],
+
         'beanstalkd' => [
             'driver' => 'beanstalkd',
             'host' => env('BEANSTALKD_QUEUE_HOST', 'localhost'),

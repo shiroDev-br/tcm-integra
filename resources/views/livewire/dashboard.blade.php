@@ -6,10 +6,24 @@
         </x-slot:actions>
     </x-ui.page-header>
 
+    @if ($coletaDeHoje !== null && $coletaDeHoje->listaTermosEncontrados() !== [])
+        <flux:callout icon="bell-alert" color="sky">
+            <flux:callout.heading>Cadastros encontrados na busca de hoje</flux:callout.heading>
+            <flux:callout.text>
+                Coleta de @dataHora($coletaDeHoje->created_at). Clique em um cadastro para ver as ocorrências e os processos.
+            </flux:callout.text>
+            <x-badges.termos-encontrados :busca="$coletaDeHoje" class="mt-2" />
+        </flux:callout>
+    @elseif ($coletaDeHoje !== null)
+        <flux:callout icon="check-circle" color="zinc" inline>
+            <flux:callout.text>A busca de hoje (@dataHora($coletaDeHoje->created_at)) não encontrou nenhum cadastro no Diário Oficial.</flux:callout.text>
+        </flux:callout>
+    @endif
+
     <div class="relative grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <x-ui.stat-card label="Cadastros ativos" :value="$totalTermosAtivos" icon="tag" hint="Municípios e empresas" :href="route('cadastros.index')" />
         <x-ui.stat-card label="Ocorrências" :value="$totalOcorrencias" icon="document-text" color="sky" hint="Encontradas nas coletas" :href="route('ocorrencias.index')" />
-        <x-ui.stat-card label="Processos" :value="$totalProcessos" icon="folder-open" color="violet" hint="Citados no Diário" :href="route('processos.index')" />
+        <x-ui.stat-card label="Processos" :value="$totalProcessos" icon="folder-open" color="violet" hint="Citados no Diário" :href="route('ocorrencias.index', ['aba' => 'processos'])" />
         <x-ui.stat-card label="Multas pendentes" :value="$multasPendentes" icon="banknotes" :color="$multasPendentes > 0 ? 'red' : 'green'" hint="Aguardando pagamento" :href="route('multas.index', ['situacao' => 'pendente'])" />
 
         <x-ui.loading-overlay target="$refresh" label="Atualizando indicadores..." class="rounded-2xl" />
@@ -30,6 +44,7 @@
                     <dl class="grid grid-cols-2 gap-3">
                         <x-ui.detail-item label="Período">@periodo($ultimaColeta->periodo_inicio, $ultimaColeta->periodo_fim)</x-ui.detail-item>
                         <x-ui.detail-item label="Cadastros">{{ $ultimaColeta->termos }}</x-ui.detail-item>
+                        <x-ui.detail-item label="Encontrados" class="col-span-2"><x-badges.termos-encontrados :busca="$ultimaColeta" /></x-ui.detail-item>
                     </dl>
                 </div>
             @else

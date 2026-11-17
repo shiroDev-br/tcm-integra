@@ -48,7 +48,13 @@ trait NavegavelPorTermo
     {
         $this->limparFiltrosDoTermo();
         $this->filtroTermo = (string) $termoId;
+        $this->aoAbrirTermo($termoId);
     }
+
+    /**
+     * Hook run whenever a term is opened (card click or link with ?termo=).
+     */
+    protected function aoAbrirTermo(int $termoId): void {}
 
     public function voltarCards(): void
     {

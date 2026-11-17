@@ -123,29 +123,16 @@ class Term extends Model
     }
 
     /**
-     * Active terms with how many occurrences each one has (term cards).
+     * Active terms with how many occurrences and distinct processes each one has (term cards).
      *
      * @return Collection<int, static>
      */
-    public static function ativosComTotalDeOcorrencias(): Collection
-    {
-        return static::query()
-            ->ativo()
-            ->withCount('ocorrencias')
-            ->orderBy('termo')
-            ->get();
-    }
-
-    /**
-     * Active terms with how many distinct processes each one has (term cards).
-     *
-     * @return Collection<int, static>
-     */
-    public static function ativosComTotalDeProcessos(): Collection
+    public static function ativosComTotais(): Collection
     {
         return static::query()
             ->ativo()
             ->select('termos.*')
+            ->withCount('ocorrencias')
             ->selectSub(
                 TermProcess::selectRaw('count(distinct processo_numero)')->whereColumn('termo_id', 'termos.id'),
                 'processos_count'

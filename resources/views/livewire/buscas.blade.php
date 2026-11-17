@@ -56,6 +56,7 @@
                 <flux:table.columns>
                     <flux:table.column>Período</flux:table.column>
                     <flux:table.column>Cadastros</flux:table.column>
+                    <flux:table.column>Encontrados</flux:table.column>
                     <flux:table.column>Duração</flux:table.column>
                     <flux:table.column>Status</flux:table.column>
                     <flux:table.column>Quando</flux:table.column>
@@ -66,6 +67,7 @@
                         <flux:table.row :key="$busca->id">
                             <flux:table.cell variant="strong">@periodo($busca->periodo_inicio, $busca->periodo_fim)</flux:table.cell>
                             <flux:table.cell>{{ $busca->termos }}</flux:table.cell>
+                            <flux:table.cell class="min-w-48 whitespace-normal"><x-badges.termos-encontrados :busca="$busca" /></flux:table.cell>
                             <flux:table.cell>{{ $busca->duracao_ms !== null ? number_format($busca->duracao_ms / 1000, 1, ',', '.').' s' : '—' }}</flux:table.cell>
                             <flux:table.cell><x-badges.search-status :status="$busca->status" /></flux:table.cell>
                             <flux:table.cell>
@@ -75,7 +77,7 @@
                         </flux:table.row>
                     @empty
                         <flux:table.row>
-                            <flux:table.cell colspan="5">
+                            <flux:table.cell colspan="6">
                                 <x-ui.empty-state icon="magnifying-glass" title="Nenhuma busca registrada" description="Use o formulário acima para iniciar uma nova coleta." />
                             </flux:table.cell>
                         </flux:table.row>

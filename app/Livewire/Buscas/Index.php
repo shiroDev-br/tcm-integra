@@ -38,11 +38,13 @@ class Index extends Component
                 'fim' => $this->fim,
             ]);
 
-            app(SearchService::class)->execute($input->toArray());
+            $resultado = app(SearchService::class)->execute($input->toArray());
 
             Flux::toast(
                 variant: 'success',
-                text: 'Coleta concluída com sucesso.',
+                heading: 'Coleta concluída',
+                text: SearchRun::avisoDosEncontrados($resultado['meta']['termos_encontrados']),
+                duration: 10000,
             );
         } catch (SourceUnavailable $e) {
             Flux::toast(

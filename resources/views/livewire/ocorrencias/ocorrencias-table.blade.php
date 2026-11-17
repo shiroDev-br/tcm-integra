@@ -40,6 +40,7 @@
             <flux:table.column>Página</flux:table.column>
             <flux:table.column>Tipo</flux:table.column>
             <flux:table.column>Trecho</flux:table.column>
+            <flux:table.column>Processos</flux:table.column>
             <flux:table.column align="end">PDF</flux:table.column>
         </flux:table.columns>
 
@@ -54,6 +55,23 @@
                     <flux:table.cell class="min-w-72 whitespace-normal">
                         <span class="line-clamp-2 max-w-xl">{{ \Illuminate\Support\Str::limit($ocorrencia->trecho, 160) }}</span>
                     </flux:table.cell>
+                    <flux:table.cell>
+                        <div class="flex max-w-56 flex-wrap gap-1">
+                            @forelse ($ocorrencia->listaProcessos() as $numero)
+                                <flux:badge
+                                    as="button"
+                                    wire:key="ocorrencia-{{ $ocorrencia->id }}-processo-{{ $numero }}"
+                                    size="sm"
+                                    color="violet"
+                                    icon="folder-open"
+                                    wire:click="$dispatchTo('processos.detalhe', 'abrir-processo', { numero: '{{ $numero }}' })"
+                                    title="Ver detalhes do processo {{ $numero }}"
+                                >{{ $numero }}</flux:badge>
+                            @empty
+                                <span class="text-zinc-400">—</span>
+                            @endforelse
+                        </div>
+                    </flux:table.cell>
                     <flux:table.cell align="end">
                         @if (filled($ocorrencia->pdf_url))
                             <x-ui.action-button icon="document-arrow-down" label="Abrir PDF" color="green" :href="$ocorrencia->pdf_url" target="_blank" />
@@ -64,7 +82,7 @@
                 </flux:table.row>
             @empty
                 <flux:table.row>
-                    <flux:table.cell colspan="5">
+                    <flux:table.cell colspan="6">
                         <x-ui.empty-state icon="document-magnifying-glass" title="Nenhuma ocorrência encontrada para este cadastro." description="Ajuste os filtros ou execute uma nova busca." />
                     </flux:table.cell>
                 </flux:table.row>

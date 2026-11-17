@@ -33,6 +33,7 @@ class Index extends Component
             'totalProcessos' => $this->totalProcessos(),
             'multasPendentes' => $this->multasPendentes(),
             'ultimaColeta' => $this->ultimaColeta(),
+            'coletaDeHoje' => SearchRun::daColetaDeHoje(),
             'ultimasBuscas' => $this->ultimasBuscas(),
         ]);
     }

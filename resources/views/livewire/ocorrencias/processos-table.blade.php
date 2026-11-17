@@ -54,7 +54,7 @@
                         <x-badges.active :active="$processo->encontrado" on="Localizado" off="Não localizado" />
                     </flux:table.cell>
                     <flux:table.cell align="end">
-                        <x-ui.action-button icon="eye" label="Ver detalhes do processo" color="sky" wire:click="verDetalhe('{{ $processo->numero }}')" />
+                        <x-ui.action-button icon="eye" label="Ver detalhes do processo" color="sky" wire:click="$dispatchTo('processos.detalhe', 'abrir-processo', { numero: '{{ $processo->numero }}' })" />
                     </flux:table.cell>
                 </flux:table.row>
             @empty

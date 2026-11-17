@@ -59,6 +59,16 @@ class Occurrence extends Model
     }
 
     /**
+     * Process numbers cited (and confirmed) in this occurrence, as a plain list.
+     *
+     * @return list<string>
+     */
+    public function listaProcessos(): array
+    {
+        return array_values(array_map(strval(...), (array) ($this->processos ?? [])));
+    }
+
+    /**
      * Only occurrences of the given type; an empty type matches all.
      *
      * @param  Builder<Occurrence>  $query

@@ -3,6 +3,7 @@
 use App\Models\Edition;
 use App\Models\Prazo;
 use App\Models\Process;
+use App\Models\SearchRun;
 use App\Models\Term;
 use App\Services\SearchService;
 use Illuminate\Support\Facades\DB;
@@ -58,6 +59,11 @@ test('coleta do dia', function () {
     expect($proc['andamento'])->not->toBeEmpty();
     expect($proc['situacao_data'])->toBe('30/09/2026');
     expect($resumo['geral']['texto'])->toContain('### Processos envolvidos');
+
+    // a coleta registra (e devolve) quais cadastros foram encontrados
+    $encontrados = [['termo_id' => $occ['termo_id'], 'termo' => 'Maiquinique', 'ocorrencias' => 1, 'processos' => 1]];
+    expect($payload['meta']['termos_encontrados'])->toBe($encontrados);
+    expect(SearchRun::query()->latest('id')->first()->termos_encontrados)->toBe($encontrados);
 });
 
 test('coleta e idempotente', function () {

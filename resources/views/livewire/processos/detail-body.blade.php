@@ -20,9 +20,7 @@
                 <span class="tabular-nums">@data($prazoAtual->data_vencimento)</span>
                 <x-badges.prazo :prazo="$prazoAtual" />
             </div>
-            <div class="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-                {{ $prazoAtual->dias }} {{ $prazoAtual->contagem->label() }} a partir de @data($prazoAtual->data_inicio)@if ($prazoAtual->estimado) (estimado)@endif
-            </div>
+            <x-prazo-contagem :prazo="$prazoAtual" class="mt-1 block text-xs text-zinc-500 dark:text-zinc-400" />
         @else
             Sem prazo publicado
         @endif
@@ -39,14 +37,30 @@
         <ul class="space-y-3">
             @foreach ($detalhe->prazos as $prazo)
                 <li wire:key="prazo-{{ $prazo->id }}" class="space-y-1 rounded-lg border border-zinc-200 p-3 text-sm dark:border-white/10">
-                    <div class="flex flex-wrap items-center justify-between gap-2">
-                        <span class="font-medium text-zinc-900 dark:text-zinc-100">
-                            Vence em @data($prazo->data_vencimento)
-                        </span>
-                        <x-badges.prazo :prazo="$prazo" />
-                    </div>
+                    @if ($prazoEmEdicao === $prazo->id)
+                        <form wire:submit="salvarPrazo" class="flex flex-wrap items-end gap-2">
+                            <flux:field class="flex-1">
+                                <flux:label>Nova data de vencimento</flux:label>
+                                <flux:input type="date" wire:model="novoVencimento" required />
+                                <flux:error name="novoVencimento" />
+                            </flux:field>
+
+                            <flux:button size="sm" variant="primary" type="submit" icon="check">Salvar</flux:button>
+                            <flux:button size="sm" variant="ghost" type="button" wire:click="cancelarEdicaoDoPrazo">Cancelar</flux:button>
+                        </form>
+                    @else
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <span class="font-medium text-zinc-900 dark:text-zinc-100">
+                                Vence em @data($prazo->data_vencimento)
+                            </span>
+                            <div class="flex items-center gap-2">
+                                <x-badges.prazo :prazo="$prazo" />
+                                <x-ui.action-button icon="pencil-square" label="Editar prazo" color="sky" wire:click="editarPrazo({{ $prazo->id }})" />
+                            </div>
+                        </div>
+                    @endif
                     <div class="text-zinc-500 dark:text-zinc-400">
-                        {{ $prazo->dias }} {{ $prazo->contagem->label() }} a partir de @data($prazo->data_inicio)@if ($prazo->estimado) (estimado)@endif
+                        <x-prazo-contagem :prazo="$prazo" />
                         ·
                         <flux:link :href="$prazo->pdfUrl()" external>Diário Oficial, página {{ $prazo->pagina }}</flux:link>
                     </div>

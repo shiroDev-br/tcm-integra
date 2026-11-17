@@ -5,6 +5,8 @@
     'singular',
     'plural',
     'action',
+    'secondary' => null,
+    'novo' => false,
 ])
 
 <button
@@ -20,7 +22,15 @@
     <div class="flex items-start justify-between gap-3">
         <div class="min-w-0 space-y-2">
             <div class="truncate font-semibold text-zinc-900 dark:text-zinc-100">{{ $termo->termo }}</div>
-            <x-badges.term-type :tipo="$termo->tipo" />
+            <div class="flex flex-wrap items-center gap-1.5">
+                <x-badges.term-type :tipo="$termo->tipo" />
+                @if ($novo)
+                    <flux:badge size="sm" color="sky" icon="sparkles">Hoje</flux:badge>
+                @endif
+            </div>
+            @if ($secondary !== null)
+                <div class="text-sm text-zinc-500 dark:text-zinc-400">{{ $secondary }}</div>
+            @endif
         </div>
 
         <span class="text-3xl font-semibold tracking-tight text-navy-800 tabular-nums dark:text-navy-300">{{ $count }}</span>

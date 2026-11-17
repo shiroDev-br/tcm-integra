@@ -1,10 +1,14 @@
-{{-- Grade de cards dos termos ativos; `countAttribute` é a coluna de contagem carregada em cada termo. --}}
+{{-- Grade de cards dos termos ativos; `countAttribute` (e o opcional `secondaryAttribute`) são colunas de contagem carregadas em cada termo. --}}
 @props([
     'termos',
     'countAttribute',
     'singular',
     'plural',
     'emptyDescription',
+    'secondaryAttribute' => null,
+    'secondarySingular' => null,
+    'secondaryPlural' => null,
+    'novo' => false,
 ])
 
 @if ($termos->isEmpty())
@@ -21,8 +25,10 @@
                 :count="(int) $termo->{$countAttribute}"
                 :singular="$singular"
                 :plural="$plural"
+                :secondary="$secondaryAttribute === null ? null : trans_choice('{1} :count '.$secondarySingular.'|[0,*] :count '.$secondaryPlural, (int) $termo->{$secondaryAttribute})"
+                :novo="$novo"
                 action="abrirTermo({{ $termo->id }})"
-                wire:key="card-{{ $countAttribute }}-{{ $termo->id }}"
+                wire:key="card-{{ $novo ? 'novo' : $countAttribute }}-{{ $termo->id }}"
             />
         @endforeach
     </div>

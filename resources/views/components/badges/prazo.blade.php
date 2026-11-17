@@ -4,5 +4,5 @@
 ])
 
 <flux:badge {{ $attributes }} size="sm" :color="$prazo->badgeColor()">
-    {{ $prazo->situacao() }}@if ($prazo->estimado)*@endif
+    {{ $prazo->situacao() }}@if ($prazo->isEstimativa())*@endif
 </flux:badge>

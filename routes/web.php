@@ -6,7 +6,6 @@ use App\Livewire\Dashboard\Index as DashboardIndex;
 use App\Livewire\Edicoes\Index as EdicoesIndex;
 use App\Livewire\Multas\Index as MultasIndex;
 use App\Livewire\Ocorrencias\Index as OcorrenciasIndex;
-use App\Livewire\Processos\Index as ProcessosIndex;
 use App\Livewire\Usuarios\Index as UsuariosIndex;
 use App\Models\Multa;
 use Illuminate\Support\Facades\Route;
@@ -21,7 +20,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::livewire('ocorrencias', OcorrenciasIndex::class)->name('ocorrencias.index');
 
-    Route::livewire('processos', ProcessosIndex::class)->name('processos.index');
+    // Processes now live in a tab of the occurrences page; old links keep working.
+    Route::redirect('processos', '/ocorrencias?aba=processos');
 
     Route::livewire('edicoes', EdicoesIndex::class)->name('edicoes.index');
 

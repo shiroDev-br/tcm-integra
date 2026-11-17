@@ -5,8 +5,10 @@ namespace App\Models;
 use App\Concerns\Pesquisavel;
 use App\Enums\TermType;
 use App\Enums\VereditoDoPortal;
+use App\Exceptions\SourceUnavailable;
 use App\Services\Clock;
 use App\Services\EnrichService;
+use App\Services\TcmProcessClient;
 use Illuminate\Contracts\Pagination\CursorPaginator;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
@@ -72,13 +74,14 @@ class Process extends Model
     }
 
     /**
-     * Deadline of the latest act (the one that sets prazo_vencimento).
+     * Deadline of the latest act (the one that sets prazo_vencimento). Ordered by the act's
+     * date, not the due date, so a hand-corrected due date never hands the role to an older act.
      *
      * @return HasOne<Prazo, $this>
      */
     public function prazoAtual(): HasOne
     {
-        return $this->hasOne(Prazo::class, 'processo_numero', 'numero')->latestOfMany('data_vencimento');
+        return $this->hasOne(Prazo::class, 'processo_numero', 'numero')->latestOfMany(['data_inicio', 'id']);
     }
 
     /**
@@ -252,6 +255,16 @@ class Process extends Model
     }
 
     /**
+     * Looks the process up again on the TCM portal and stores the fresh data (progress, status...).
+     *
+     * @throws SourceUnavailable
+     */
+    public static function atualizarDoPortal(string $numero, TcmProcessClient $tcm): void
+    {
+        static::registrarConsultas([static::daConsulta($tcm->lookup($numero))]);
+    }
+
+    /**
      * Process for the detail view: term links and deadlines (latest first) eager loaded.
      */
     public static function comDetalhes(string $numero): ?static
@@ -259,13 +272,13 @@ class Process extends Model
         return static::query()
             ->with([
                 'termoProcessos.termo',
-                'prazos' => fn (HasMany $prazos) => $prazos->orderByDesc('data_vencimento'),
+                'prazos' => fn (HasMany $prazos) => $prazos->maisRecentesPrimeiro(),
             ])
             ->find($numero);
     }
 
     /**
-     * Copies the latest due date of each process onto its row (single UPDATE with a subquery).
+     * Copies the due date of each process' latest act onto its row (single UPDATE with a subquery).
      *
      * @param  list<string>  $numeros
      */
@@ -279,8 +292,10 @@ class Process extends Model
             ->whereIn('numero', $numeros)
             ->update([
                 'prazo_vencimento' => Prazo::query()
-                    ->selectRaw('MAX(data_vencimento)')
-                    ->whereColumn('prazos.processo_numero', 'processos.numero'),
+                    ->select('data_vencimento')
+                    ->whereColumn('prazos.processo_numero', 'processos.numero')
+                    ->maisRecentesPrimeiro()
+                    ->limit(1),
             ]);
     }
 

@@ -15,7 +15,9 @@ function esperarColetaDeHoje(int $vezes = 1): void
         ->shouldReceive('execute')
         ->with(['periodo' => 'hoje'])
         ->times($vezes)
-        ->andReturn([]);
+        ->andReturn(['meta' => ['termos_encontrados' => [
+            ['termo_id' => 1, 'termo' => 'Maiquinique', 'ocorrencias' => 2, 'processos' => 1],
+        ]]]);
 }
 
 test('ativar o switch salva na hora com o horario sugerido', function () {
@@ -103,7 +105,9 @@ test('comando coleta somente o dia atual uma vez por dia', function () {
     Configuracao::agendarColeta(true, '00:00');
     esperarColetaDeHoje();
 
-    $this->artisan('tcm:coleta-automatica')->assertSuccessful();
+    $this->artisan('tcm:coleta-automatica')
+        ->expectsOutputToContain('Cadastro encontrado: Maiquinique (2).')
+        ->assertSuccessful();
     $this->artisan('tcm:coleta-automatica')->assertSuccessful();
 
     expect(Configuracao::atual()->ultima_coleta_automatica)->toBe(Clock::today());

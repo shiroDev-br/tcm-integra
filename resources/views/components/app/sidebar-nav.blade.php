@@ -7,6 +7,10 @@
         <flux:sidebar.item icon="banknotes" :href="route('multas.index')" :current="request()->routeIs('multas.*')" wire:navigate>
             {{ __('Multas') }}
         </flux:sidebar.item>
+
+        <flux:sidebar.item icon="folder-open" :href="route('organizacoes.index')" :current="request()->routeIs('organizacoes.*')" wire:navigate>
+            {{ __('Organizador') }}
+        </flux:sidebar.item>
     </flux:sidebar.group>
 
     <flux:sidebar.group heading="Monitoramento" class="grid">
@@ -15,11 +19,7 @@
         </flux:sidebar.item>
 
         <flux:sidebar.item icon="document-text" :href="route('ocorrencias.index')" :current="request()->routeIs('ocorrencias.index')" wire:navigate>
-            {{ __('Ocorrências') }}
-        </flux:sidebar.item>
-
-        <flux:sidebar.item icon="folder-open" :href="route('processos.index')" :current="request()->routeIs('processos.index')" wire:navigate>
-            {{ __('Processos') }}
+            {{ __('Ocorrências e processos') }}
         </flux:sidebar.item>
 
         <flux:sidebar.item icon="newspaper" :href="route('edicoes.index')" :current="request()->routeIs('edicoes.index')" wire:navigate>

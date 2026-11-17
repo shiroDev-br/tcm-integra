@@ -7,6 +7,8 @@ use App\Services\Clock;
 use App\Services\EnrichService;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\DB;
@@ -23,10 +25,11 @@ use Illuminate\Support\Facades\DB;
  * @property string $data_inicio
  * @property string $data_vencimento
  * @property bool $estimado start is not the publication (e.g. electronic notice) or holidays were not counted
+ * @property bool $ajustado due date corrected by hand in the panel
  * @property string $trecho
  * @property string $created_at
  */
-#[Fillable(['processo_numero', 'edicao_id', 'pagina', 'dias', 'contagem', 'data_inicio', 'data_vencimento', 'estimado', 'trecho', 'created_at'])]
+#[Fillable(['processo_numero', 'edicao_id', 'pagina', 'dias', 'contagem', 'data_inicio', 'data_vencimento', 'estimado', 'ajustado', 'trecho', 'created_at'])]
 class Prazo extends Model
 {
     protected $table = 'prazos';
@@ -45,6 +48,7 @@ class Prazo extends Model
             'pagina' => 'integer',
             'contagem' => ContagemDePrazo::class,
             'estimado' => 'boolean',
+            'ajustado' => 'boolean',
         ];
     }
 
@@ -56,6 +60,36 @@ class Prazo extends Model
     public function edicao(): BelongsTo
     {
         return $this->belongsTo(Edition::class, 'edicao_id');
+    }
+
+    /**
+     * Latest act first (the current deadline of the process comes first).
+     *
+     * @param  Builder<Prazo>  $query
+     */
+    #[Scope]
+    protected function maisRecentesPrimeiro(Builder $query): void
+    {
+        $query->orderByDesc('data_inicio')->orderByDesc('id');
+    }
+
+    /**
+     * Corrects the due date by hand and refreshes the process' current deadline.
+     * Later collections never overwrite it (deadlines are inserted with insertOrIgnore).
+     */
+    public function ajustarVencimento(string $dataVencimento): void
+    {
+        $this->update(['data_vencimento' => $dataVencimento, 'ajustado' => true]);
+
+        Process::atualizarPrazoVencimento([$this->processo_numero]);
+    }
+
+    /**
+     * Whether the shown due date is our estimate (a hand-corrected date is not).
+     */
+    public function isEstimativa(): bool
+    {
+        return $this->estimado && ! $this->ajustado;
     }
 
     /**

@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Enums\PeriodPreset;
 use App\Exceptions\SourceUnavailable;
 use App\Models\Configuracao;
+use App\Models\SearchRun;
 use App\Services\Clock;
 use App\Services\SearchService;
 use Illuminate\Console\Attributes\Description;
@@ -33,14 +34,14 @@ class ColetaAutomatica extends Command
         }
 
         try {
-            $search->execute(['periodo' => PeriodPreset::Today->value]);
+            $resultado = $search->execute(['periodo' => PeriodPreset::Today->value]);
         } catch (SourceUnavailable $e) {
             $this->error($e->getMessage());
 
             return self::FAILURE;
         }
 
-        $this->info("Automatic collection for {$hoje} finished.");
+        $this->info("Automatic collection for {$hoje} finished. ".SearchRun::avisoDosEncontrados($resultado['meta']['termos_encontrados']));
 
         return self::SUCCESS;
     }

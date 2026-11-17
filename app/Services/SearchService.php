@@ -66,17 +66,19 @@ class SearchService
         $requests = $this->egba->requests - $reqsIni;
         $status = $avisos === [] ? SearchStatus::Ok : SearchStatus::Partial;
 
-        $this->registerRun($periodo, count($termos), $requests, $t0, $status, $avisos === [] ? null : implode('; ', $avisos));
-
         $ocorrencias = $this->occurrenceRows($periodo);
         $processos = $this->processRows($periodo);
         $vinculos = $this->linksByTerm($periodo);
+        $encontrados = self::foundTerms($ocorrencias);
+
+        $this->registerRun($periodo, count($termos), $requests, $t0, $status, $avisos === [] ? null : implode('; ', $avisos), $encontrados);
 
         $meta = [
             'duracao_ms' => $duracao,
             'requests' => $requests,
             'requests_tcm' => $this->tcm->requests - $tcmIni,
             'avisos' => $avisos,
+            'termos_encontrados' => $encontrados,
             'cache' => false,
         ];
 
@@ -101,14 +103,16 @@ class SearchService
                 ->all()
         );
 
+        $ocorrencias = $this->occurrenceRows($periodo);
+
         return $this->payload(
             $periodo,
             $termos,
             $edicoes,
-            $this->occurrenceRows($periodo),
+            $ocorrencias,
             $this->processRows($periodo),
             $this->linksByTerm($periodo),
-            ['duracao_ms' => 0, 'requests' => 0, 'requests_tcm' => 0, 'avisos' => [], 'cache' => true],
+            ['duracao_ms' => 0, 'requests' => 0, 'requests_tcm' => 0, 'avisos' => [], 'termos_encontrados' => self::foundTerms($ocorrencias), 'cache' => true],
         );
     }
 
@@ -527,6 +531,38 @@ class SearchService
     }
 
     /**
+     * Terms with occurrences in the period, with how many occurrences and distinct processes
+     * each one has (the run's notice). Rows come ordered by term name.
+     *
+     * @param  list<array<string, mixed>>  $ocorrencias
+     * @return list<array{termo_id: int, termo: string, ocorrencias: int, processos: int}>
+     */
+    private static function foundTerms(array $ocorrencias): array
+    {
+        $porTermo = [];
+
+        foreach ($ocorrencias as $ocorrencia) {
+            $termoId = (int) $ocorrencia['termo_id'];
+            $porTermo[$termoId] ??= ['termo' => (string) $ocorrencia['termo'], 'ocorrencias' => 0, 'processos' => []];
+            $porTermo[$termoId]['ocorrencias']++;
+            $porTermo[$termoId]['processos'] += array_fill_keys(array_map(strval(...), $ocorrencia['processos']), true);
+        }
+
+        $encontrados = [];
+
+        foreach ($porTermo as $termoId => $dados) {
+            $encontrados[] = [
+                'termo_id' => $termoId,
+                'termo' => $dados['termo'],
+                'ocorrencias' => $dados['ocorrencias'],
+                'processos' => count($dados['processos']),
+            ];
+        }
+
+        return $encontrados;
+    }
+
+    /**
      * Cached processes cited in the period (sorted numbers, consulta_url attached).
      *
      * @return list<array<string, mixed>>
@@ -650,6 +686,8 @@ class SearchService
 
     /**
      * Records the run in `buscas` (audit trail of each collection).
+     *
+     * @param  list<array{termo_id: int, termo: string, ocorrencias: int, processos: int}>|null  $encontrados  null when the source failed
      */
     private function registerRun(
         PeriodRange $periodo,
@@ -658,6 +696,7 @@ class SearchService
         float $t0,
         SearchStatus $status,
         ?string $erro,
+        ?array $encontrados = null,
     ): void {
         SearchRun::query()->create([
             'periodo_inicio' => $periodo->start,
@@ -667,6 +706,7 @@ class SearchService
             'duracao_ms' => (int) ((microtime(true) - $t0) * 1000),
             'status' => $status,
             'erro' => $erro,
+            'termos_encontrados' => $encontrados,
             'created_at' => Clock::nowUtcIso(),
         ]);
     }
